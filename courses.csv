@@ -1,0 +1,5 @@
+courseCode,courseName,department,semester,credits,assignedFacultyId,status
+CS301,Database Systems & Design,Computer Science,4,4,FAC1001,ACTIVE
+CS302,Algorithms & Complexity,Computer Science,4,4,FAC1001,ACTIVE
+IT205,Web Application Architecture,Information Technology,3,3,FAC1002,ACTIVE
+AI101,Neural Networks & Deep Learning,Artificial Intelligence,2,4,FAC1003,ACTIVE

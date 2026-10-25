@@ -1,0 +1,4 @@
+eventId,eventName,description,dateTime,venue,coordinator,status
+EVT1003,Guest Lecture: Generative AI in Production,Keynote address by Principal AI Architect from Silicon Valley.,2026-10-31 14:00,Seminar Hall 3,Dr. Alan Turing-Smith,UPCOMING
+EVT1002,Tech Career & Internship Fair,Meet recruiters from over 40 leading technology organizations and startups.,2026-11-14 10:00,Central Auditorium,Campus Placement Cell,UPCOMING
+EVT1001,HackCampus 2026 Grand Hackathon,36-hour collegiate hackathon celebrating software engineering and tech innovation.,2026-11-04 09:00,"Innovation Hub, Block B",Prof. Elena Rostova,UPCOMING

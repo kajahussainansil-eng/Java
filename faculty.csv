@@ -1,0 +1,4 @@
+facultyId,fullName,department,designation,email,phone,status
+FAC1003,Dr. Alan Turing-Smith,Artificial Intelligence,Assistant Professor,a.smith@campus.edu,+1-555-0103,ACTIVE
+FAC1001,Dr. Robert Vance,Computer Science,Professor & HOD,r.vance@campus.edu,+1-555-0101,ACTIVE
+FAC1002,Prof. Elena Rostova,Information Technology,Associate Professor,e.rostova@campus.edu,+1-555-0102,ACTIVE

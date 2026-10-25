@@ -1,0 +1,7 @@
+noticeId,title,category,publicationDate,description,publishedBy,status
+NOT1006,Final Examination Schedule,ACADEMIC,2026-10-25,Exams commence Dec 15.,Dr. Arthur Pendelton,ACTIVE
+NOT1001,Mid-Term Examination Schedule Released,ACADEMIC,2026-10-23,The official schedule for Mid-Semester examinations is now available on the student portal. Students must report 15 minutes prior to hall entry.,Dr. Robert Vance,ACTIVE
+NOT1005,Final Examination Schedule,ACADEMIC,2026-10-25,Exams commence Dec 15.,Dr. Arthur Pendelton,ACTIVE
+NOT1004,Final Examination Schedule,ACADEMIC,2026-10-25,Exams commence Dec 15.,Dr. Arthur Pendelton,ACTIVE
+NOT1003,Campus WiFi Infrastructure Maintenance Notice,URGENT,2026-10-24,Scheduled maintenance of campus backbone routers will occur tonight between 11:00 PM and 02:00 AM. Intermittent connectivity expected.,Campus Administration,ACTIVE
+NOT1002,Annual Hackathon 2026 Registrations Open,EVENT,2026-10-21,"Register your team of up to 4 members for HackCampus 2026 with $10,000 in grand prizes. Tracks include AI, IoT, and Cloud Computing.",Admin,ACTIVE

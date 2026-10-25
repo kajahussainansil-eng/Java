@@ -1,0 +1,9 @@
+studentId,fullName,department,semester,email,phone,enrollmentDate,status
+STU1002,Sophia Martinez,Computer Science,4,sophia.m@campus.edu,+1-555-0202,2024-08-15,ACTIVE
+STU1001,Alex Chen,Computer Science,4,alex.chen@campus.edu,+1-555-0201,2024-08-15,ACTIVE
+STU1004,Maya Patel,Artificial Intelligence,2,maya.patel@campus.edu,+1-555-0204,2025-08-20,ACTIVE
+STU1003,David Kim,Information Technology,3,david.kim@campus.edu,+1-555-0203,2025-01-10,ACTIVE
+STU1006,Updated Test Student,Computer Science,3,test_1792896907986@campusflow.edu,+1-555-8888,2026-10-25,INACTIVE
+STU1005,Marcus Johnson,Computer Science,4,marcus.j@campus.edu,+1-555-0205,2024-08-15,ACTIVE
+STU1008,Updated Test Student,Computer Science,3,test_1792897111410@campusflow.edu,+1-555-8888,2026-10-25,INACTIVE
+STU1007,Updated Test Student,Computer Science,3,test_1792897028692@campusflow.edu,+1-555-8888,2026-10-25,INACTIVE

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0B1020">
+  <meta name="description" content="CampusFlow: Smart Campus Management & Student Services System">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>CampusFlow — Smart Campus Management</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/png" href="/icons/icon-192.png">
+</head>
+<body>
+
+  <!-- Offline Connectivity Banner -->
+  <div id="offlineBanner" class="offline-banner">
+    Offline Mode: Reconnecting to CampusFlow server...
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- App Shell Header -->
+  <header id="appHeader" class="app-header" style="display: none;">
+    <div class="brand-wrapper">
+      <div class="brand-icon">CF</div>
+      <div class="brand-text">
+        <h1>CampusFlow</h1>
+        <span>Your Campus. Connected.</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="userRoleBadge" class="role-pill admin">ADMIN</span>
+      <button id="logoutBtn" class="icon-btn" title="Logout" aria-label="Logout">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Viewport -->
+  <main class="main-viewport">
+
+    <!-- 1. LOGIN VIEW -->
+    <section id="viewLogin" class="view-section active-view">
+      <div class="login-wrap">
+        <div class="login-card">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div class="brand-icon" style="width: 48px; height: 48px; font-size: 24px; margin: 0 auto 10px;">CF</div>
+            <h2 style="font-size: 20px; font-weight: 800; color: #fff;">CampusFlow</h2>
+            <p style="font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.5px;">SMART CAMPUS MANAGEMENT</p>
+          </div>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <label class="form-label" for="usernameInput">Username</label>
+              <input type="text" id="usernameInput" class="form-input" placeholder="e.g. admin or alex.chen" required autocomplete="username">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="passwordInput">Password</label>
+              <input type="password" id="passwordInput" class="form-input" placeholder="Enter password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Sign In</button>
+          </form>
+
+          <div style="margin-top: 24px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 16px;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">One-Tap Demo Login</span>
+            <div class="demo-role-grid">
+              <button type="button" class="demo-btn" onclick="quickLogin('admin', 'Admin@123')">
+                <span style="display: block; color: var(--primary); font-weight: 700;">Admin</span>
+                <span style="font-size: 10px;">Dean Taylor</span>
+              </button>
+              <button type="button" class="demo-btn" onclick="quickLogin('robert.vance', 'Faculty@123')">
+                <span style="display: block; color: var(--purple); font-weight: 700;">Faculty</span>
+                <span style="font-size: 10px;">Dr. Vance</span>
+              </button>
+              <button type="button" class="demo-btn" onclick="quickLogin('alex.chen', 'Student@123')">
+                <span style="display: block; color: var(--green); font-weight: 700;">Student</span>
+                <span style="font-size: 10px;">Alex Chen</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. DASHBOARD VIEW -->
+    <section id="viewDashboard" class="view-section">
+      <div class="view-heading">
+        <h2 id="dashWelcomeTitle">Welcome to CampusFlow</h2>
+        <p id="dashWelcomeSubtitle">Academic Year 2026-2027 &bull; Spring Semester</p>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div id="dashStatsGrid" class="stats-grid">
+        <!-- Rendered dynamically by role -->
+      </div>
+
+      <!-- Low Attendance Alert Box (Admin / Student) -->
+      <div id="lowAttendanceAlertBox" class="card" style="display: none; border-color: rgba(248, 113, 113, 0.4); background: rgba(248, 113, 113, 0.08);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">&#9888;&#65039;</span>
+          <div>
+            <h4 style="font-size: 13px; font-weight: 700; color: var(--rose);">Attendance Warning Notice</h4>
+            <p id="lowAttendanceAlertText" style="font-size: 12px; color: var(--text-secondary);"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student Attendance Ring Display -->
+      <div id="studentAttendanceRingCard" class="card" style="display: none; text-align: center;">
+        <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">My Overall Attendance Status</h3>
+        <div class="attendance-ring-container">
+          <div class="attendance-ring">
+            <svg viewBox="0 0 100 100">
+              <circle class="ring-bg" cx="50" cy="50" r="40"></circle>
+              <circle id="dashRingFill" class="ring-fill" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="50"></circle>
+            </svg>
+            <div class="attendance-ring-content">
+              <div id="dashRingPercent" class="ring-percentage">0%</div>
+              <div id="dashRingStatus" class="ring-label">Good Standing</div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted);">Required threshold: 75.0% to qualify for final exams</p>
+      </div>
+
+      <!-- Dashboard Cards Section -->
+      <div id="dashFeedCards">
+        <!-- Pinned Notices & Events -->
+      </div>
+    </section>
+
+    <!-- 3. STUDENTS VIEW -->
+    <section id="viewStudents" class="view-section">
+      <div class="view-heading" style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h2>Student Directory</h2>
+          <p>Enrollment and academic tracking</p>
+        </div>
+        <button id="addStudentBtn" class="btn btn-primary btn-sm" onclick="openAddStudentModal()">+ Add</button>
+      </div>
+
+      <div class="filter-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="studentSearchInput" placeholder="Search by name, roll no, email..." oninput="filterStudents()">
+        </div>
+        <div class="chip-scroll" id="studentDeptChips">
+          <button class="chip active" onclick="setStudentDeptFilter('ALL', this)">All</button>
+          <button class="chip" onclick="setStudentDeptFilter('Computer Science', this)">CS</button>
+          <button class="chip" onclick="setStudentDeptFilter('Electrical Engineering', this)">EE</button>
+          <button class="chip" onclick="setStudentDeptFilter('Mechanical Engineering', this)">ME</button>
+          <button class="chip" onclick="setStudentDeptFilter('Business Administration', this)">Business</button>
+        </div>
+      </div>
+
+      <div id="studentsList">
+        <!-- Rendered list of student cards -->
+      </div>
+    </section>
+
+    <!-- 4. FACULTY VIEW -->
+    <section id="viewFaculty" class="view-section">
+      <div class="view-heading" style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h2>Faculty Directory</h2>
+          <p>Teaching staff and departments</p>
+        </div>
+        <button id="addFacultyBtn" class="btn btn-primary btn-sm" onclick="openAddFacultyModal()">+ Add</button>
+      </div>
+
+      <div class="filter-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="facultySearchInput" placeholder="Search faculty name, department..." oninput="filterFaculty()">
+        </div>
+      </div>
+
+      <div id="facultyList">
+        <!-- Rendered list of faculty cards -->
+      </div>
+    </section>
+
+    <!-- 5. COURSES VIEW -->
+    <section id="viewCourses" class="view-section">
+      <div class="view-heading" style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h2>Course Catalog</h2>
+          <p>Active curriculum and schedules</p>
+        </div>
+        <button id="addCourseBtn" class="btn btn-primary btn-sm" onclick="openAddCourseModal()">+ Add</button>
+      </div>
+
+      <div class="filter-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="courseSearchInput" placeholder="Search course code or title..." oninput="filterCourses()">
+        </div>
+      </div>
+
+      <div id="coursesList">
+        <!-- Rendered list of course cards -->
+      </div>
+    </section>
+
+    <!-- 6. ATTENDANCE VIEW -->
+    <section id="viewAttendance" class="view-section">
+      <div class="view-heading">
+        <h2>Smart Attendance Marker</h2>
+        <p>Rapid roll-call and record verification</p>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label" for="attCourseSelect">Select Course</label>
+          <select id="attCourseSelect" class="form-select" onchange="loadAttendanceRoster()"></select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="attDateInput">Session Date</label>
+          <input type="date" id="attDateInput" class="form-input" onchange="loadAttendanceRoster()">
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin: 12px 0;">
+        <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Class Roster</span>
+        <button class="btn btn-secondary btn-sm" onclick="markAllAttendance('PRESENT')">Mark All Present</button>
+      </div>
+
+      <div id="attendanceRosterList">
+        <!-- Interactive student rows with P/A/L/E buttons -->
+      </div>
+
+      <button id="saveAttendanceBtn" class="btn btn-primary btn-block" style="margin-top: 14px;" onclick="submitAttendanceBatch()">Save Session Attendance</button>
+    </section>
+
+    <!-- 7. NOTICES VIEW -->
+    <section id="viewNotices" class="view-section">
+      <div class="view-heading" style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h2>Campus Notice Board</h2>
+          <p>Official alerts and announcements</p>
+        </div>
+        <button id="addNoticeBtn" class="btn btn-primary btn-sm" onclick="openAddNoticeModal()">+ Post</button>
+      </div>
+
+      <div class="filter-toolbar">
+        <div class="chip-scroll" id="noticeCategoryChips">
+          <button class="chip active" onclick="setNoticeFilter('ALL', this)">All</button>
+          <button class="chip" onclick="setNoticeFilter('ACADEMIC', this)">Academic</button>
+          <button class="chip" onclick="setNoticeFilter('EVENT', this)">Events</button>
+          <button class="chip" onclick="setNoticeFilter('ALERT', this)">Urgent</button>
+          <button class="chip" onclick="setNoticeFilter('ADMINISTRATIVE', this)">Admin</button>
+        </div>
+      </div>
+
+      <div id="noticesList">
+        <!-- Notice Cards -->
+      </div>
+    </section>
+
+    <!-- 8. EVENTS VIEW -->
+    <section id="viewEvents" class="view-section">
+      <div class="view-heading">
+        <h2>Campus Events & Hackathons</h2>
+        <p>Upcoming hackathons, seminars, and fests</p>
+      </div>
+      <div id="eventsList">
+        <!-- Event Cards -->
+      </div>
+    </section>
+
+    <!-- 9. COMPLAINTS VIEW -->
+    <section id="viewComplaints" class="view-section">
+      <div class="view-heading" style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h2>Student Complaints Desk</h2>
+          <p>Issue reporting and resolution tracker</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openAddComplaintModal()">+ Lodge Ticket</button>
+      </div>
+
+      <div class="filter-toolbar">
+        <div class="chip-scroll" id="complaintStatusChips">
+          <button class="chip active" onclick="setComplaintFilter('ALL', this)">All Tickets</button>
+          <button class="chip" onclick="setComplaintFilter('SUBMITTED', this)">Submitted</button>
+          <button class="chip" onclick="setComplaintFilter('IN_REVIEW', this)">In Review</button>
+          <button class="chip" onclick="setComplaintFilter('RESOLVED', this)">Resolved</button>
+        </div>
+      </div>
+
+      <div id="complaintsList">
+        <!-- Complaint Cards -->
+      </div>
+    </section>
+
+    <!-- 10. REPORTS & SYSTEM VIEW -->
+    <section id="viewReports" class="view-section">
+      <div class="view-heading">
+        <h2>Reports & System Operations</h2>
+        <p>Analytics, CSV export, and desktop sync</p>
+      </div>
+
+      <!-- Low Attendance Alerts Section -->
+      <div class="card">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">&#9888;&#65039; Low-Attendance Defaulters (&lt; 75%)</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Students currently below mandatory university attendance threshold.</p>
+        <div id="lowAttendanceReportList">
+          <!-- Populated from server -->
+        </div>
+      </div>
+
+      <!-- CSV Data Export & Backups -->
+      <div class="card">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 10px;">CSV Exports & Data Backups</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Download clean CSV datasets directly to your phone or trigger timestamped data backups.</p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <a href="/api/export/csv?entity=students" class="btn btn-secondary btn-sm" download="students.csv">Download Students CSV</a>
+          <a href="/api/export/csv?entity=attendance" class="btn btn-secondary btn-sm" download="attendance.csv">Download Attendance CSV</a>
+          <button class="btn btn-secondary btn-sm" onclick="createDataBackup()">Create Persistent Backup</button>
+          <button class="btn btn-secondary btn-sm" onclick="syncWithDesktop()">Sync Data With Desktop App</button>
+        </div>
+      </div>
+
+      <!-- System Information -->
+      <div class="card">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">CampusFlow Architecture</h3>
+        <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+          <strong>Backend:</strong> Pure Java HTTP Server (Zero-Dependency)<br>
+          <strong>Security:</strong> PBKDF2-HMAC-SHA256 salted password hashing<br>
+          <strong>Persistence:</strong> Atomic CSV file transactions in <code>campusflow_web/web_data/</code><br>
+          <strong>Frontend:</strong> Mobile-first PWA with offline Service Worker shell
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav id="bottomNav" class="bottom-nav" style="display: none;">
+    <button class="nav-tab active" onclick="switchNav('dashboard', this)">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Dashboard</span>
+    </button>
+    <button id="navStudentsTab" class="nav-tab" onclick="switchNav('students', this)">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      <span>Students</span>
+    </button>
+    <button id="navAttendanceTab" class="nav-tab" onclick="switchNav('attendance', this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><polyline points="9 16 11 18 15 14"></polyline></svg>
+      <span>Attendance</span>
+    </button>
+    <button class="nav-tab" onclick="switchNav('notices', this)">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+      <span>Campus</span>
+    </button>
+    <button class="nav-tab" onclick="switchNav('services', this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span>Services</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: ADD / EDIT STUDENT -->
+  <div id="studentModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 id="studentModalTitle" class="modal-title">Add Student</h3>
+        <button class="icon-btn" onclick="closeModal('studentModal')">&times;</button>
+      </div>
+      <form id="studentForm" onsubmit="submitStudentForm(event)">
+        <input type="hidden" id="studentFormId">
+        <div class="form-group">
+          <label class="form-label" for="stdRollNo">Roll Number</label>
+          <input type="text" id="stdRollNo" class="form-input" required placeholder="e.g. CS202401">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="stdName">Full Name</label>
+          <input type="text" id="stdName" class="form-input" required placeholder="e.g. Alex Chen">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="stdEmail">Email Address</label>
+          <input type="email" id="stdEmail" class="form-input" required placeholder="alex.chen@campusflow.edu">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="stdPhone">Phone Number</label>
+          <input type="tel" id="stdPhone" class="form-input" required placeholder="+1-555-0101">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="stdDept">Department</label>
+          <select id="stdDept" class="form-select">
+            <option value="Computer Science">Computer Science</option>
+            <option value="Electrical Engineering">Electrical Engineering</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Business Administration">Business Administration</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="stdSem">Semester</label>
+          <input type="number" id="stdSem" class="form-input" min="1" max="8" value="4" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="stdGpa">GPA (0.00 - 4.00)</label>
+          <input type="number" step="0.01" id="stdGpa" class="form-input" min="0" max="4" value="3.50" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Save Student</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: LODGE COMPLAINT -->
+  <div id="complaintModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">Lodge Complaint / Ticket</h3>
+        <button class="icon-btn" onclick="closeModal('complaintModal')">&times;</button>
+      </div>
+      <form id="complaintForm" onsubmit="submitComplaintForm(event)">
+        <div class="form-group">
+          <label class="form-label" for="cmpCategory">Category</label>
+          <select id="cmpCategory" class="form-select">
+            <option value="INFRASTRUCTURE">Infrastructure & Classroom</option>
+            <option value="HOSTEL">Hostel & Housing</option>
+            <option value="ACADEMIC">Academic & Examination</option>
+            <option value="CANTEEN">Canteen & Dining</option>
+            <option value="IT_SERVICES">IT & Wi-Fi Services</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cmpTitle">Subject / Title</label>
+          <input type="text" id="cmpTitle" class="form-input" required placeholder="Brief description of issue">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cmpDesc">Detailed Description</label>
+          <textarea id="cmpDesc" class="form-textarea" required placeholder="Include room number, equipment details, etc."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Submit Ticket</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: POST NOTICE -->
+  <div id="noticeModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">Post Campus Notice</h3>
+        <button class="icon-btn" onclick="closeModal('noticeModal')">&times;</button>
+      </div>
+      <form id="noticeForm" onsubmit="submitNoticeForm(event)">
+        <div class="form-group">
+          <label class="form-label" for="notCategory">Category</label>
+          <select id="notCategory" class="form-select">
+            <option value="ACADEMIC">Academic</option>
+            <option value="EVENT">Event</option>
+            <option value="ADMINISTRATIVE">Administrative</option>
+            <option value="ALERT">Urgent Alert</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="notTitle">Notice Title</label>
+          <input type="text" id="notTitle" class="form-input" required placeholder="e.g. Midterm Schedule Announcement">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="notContent">Content</label>
+          <textarea id="notContent" class="form-textarea" required placeholder="Detailed message for students and staff..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Broadcast Notice</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

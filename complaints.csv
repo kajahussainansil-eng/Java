@@ -1,0 +1,7 @@
+complaintId,studentId,subject,category,description,submissionDate,status,assignedHandler,resolutionNotes
+CMP1002,STU1002,Library Quiet Room Noise Disturbance,LIBRARY,Excessive noise near the 2nd-floor individual study cubicles during peak afternoon study hours.,2026-10-20,RESOLVED,Chief Librarian,Additional acoustic signage posted and patrol frequency increased.
+CMP1001,STU1001,Air Conditioner Malfunction in Lab 304,INFRASTRUCTURE,The central air conditioning unit in CSE Lab 304 has been blowing warm air since yesterday afternoon.,2026-10-22,IN_PROGRESS,Facilities Team,Technician dispatched to inspect refrigerant pressure.
+CMP1004,STU1001,Wi-Fi Drops in Lab 3,IT_SERVICES,Signal fluctuates during afternoon coding labs.,2026-10-25,RESOLVED,Network Eng,Access point antenna replaced.
+CMP1003,STU1005,Hostel Hot Water Heater Disruption,HOSTEL,Hostel Block C 3rd floor water heater has intermittent power trip issues every morning.,2026-10-24,PENDING,Campus Administration,
+CMP1006,STU1001,Wi-Fi Drops in Lab 3,IT_SERVICES,Signal fluctuates during afternoon coding labs.,2026-10-25,RESOLVED,Network Eng,Access point antenna replaced.
+CMP1005,STU1001,Wi-Fi Drops in Lab 3,IT_SERVICES,Signal fluctuates during afternoon coding labs.,2026-10-25,RESOLVED,Network Eng,Access point antenna replaced.
